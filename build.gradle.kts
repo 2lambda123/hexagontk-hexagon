@@ -151,6 +151,7 @@ apiValidation {
             "templates_test",
 
             // Experimental modules
+            "handlers_mutable",
             "rest",
             "rest_tools",
 //            "serverless",
