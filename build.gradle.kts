@@ -152,6 +152,7 @@ apiValidation {
 
             // Experimental modules
             "handlers_mutable",
+            "http_mutable",
             "rest",
             "rest_tools",
 //            "serverless",
