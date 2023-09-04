@@ -52,8 +52,8 @@ internal abstract class ServletRequestAdapter(req: HttpServletRequest) : HttpReq
                     it.maxAge.toLong(),
                     it.secure,
                     it.path ?: "/",
-                    true, //it.isHttpOnly, // TODO Fix this issue
-                    it.domain ?: "",
+                    it.isHttpOnly,
+                    it.domain,
                 )
             }
             ?: emptyList()
