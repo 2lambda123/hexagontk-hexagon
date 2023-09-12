@@ -41,6 +41,10 @@ internal class NettyServerHandler(
     private val sslHandler: SslHandler?,
 ) : ChannelInboundHandlerAdapter() {
 
+    private companion object {
+        val scope = CoroutineScope(IO)
+    }
+
     private var certificates: List<X509Certificate> = emptyList()
 
     override fun channelRead(context: ChannelHandlerContext, nettyRequest: Any) {
@@ -49,7 +53,7 @@ internal class NettyServerHandler(
     }
 
     private fun readHttpRequest(context: ChannelHandlerContext, nettyRequest: HttpRequest) {
-        CoroutineScope(IO).launch {
+        scope.launch {
             try {
                 val result = nettyRequest.decoderResult()
 
