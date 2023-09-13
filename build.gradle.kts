@@ -157,6 +157,7 @@ apiValidation {
             "http_server_coroutines",
             "http_server_netty_coroutines",
             "http_server_netty_epoll_coroutines",
+            "http_server_vertx_coroutines",
             "http_test_coroutines",
             "rest",
             "rest_tools",

@@ -19,6 +19,7 @@ import com.hexagonkt.http.model.OK_200
 import com.hexagonkt.http.handlers.coroutines.HttpCallback
 import com.hexagonkt.http.handlers.coroutines.HttpHandler
 import com.hexagonkt.http.handlers.coroutines.path
+import com.hexagonkt.http.model.HttpMethod.POST
 import com.hexagonkt.http.server.coroutines.HttpServerPort
 import com.hexagonkt.http.server.coroutines.HttpServerSettings
 import com.hexagonkt.http.server.coroutines.serve
@@ -115,6 +116,7 @@ abstract class ClientTest(
 
         val response = client.send(
             HttpRequest(
+                method = POST,
                 formParameters = FormParameters(
                     FormParameter("p1", "v11"),
                     FormParameter("p2", "v21", "v22"),
