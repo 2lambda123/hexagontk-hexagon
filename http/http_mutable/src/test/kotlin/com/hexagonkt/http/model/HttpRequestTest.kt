@@ -10,6 +10,7 @@ import com.hexagonkt.core.urlOf
 import com.hexagonkt.http.model.HttpMethod.*
 import com.hexagonkt.http.model.HttpProtocol.*
 import java.security.cert.X509Certificate
+import org.junit.jupiter.api.Test
 import kotlin.test.*
 
 internal class HttpRequestTest {

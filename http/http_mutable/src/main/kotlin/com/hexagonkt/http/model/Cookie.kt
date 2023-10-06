@@ -2,6 +2,19 @@ package com.hexagonkt.http.model
 
 import java.time.Instant
 
+/**
+ * TODO .
+ *
+ * @property name
+ * @property value
+ * @property maxAge '-1' is the same as empty
+ * @property secure
+ * @property path '/' is the same as empty
+ * @property httpOnly
+ * @property domain
+ * @property sameSite
+ * @property expires
+ */
 data class Cookie(
     var name: String,
     var value: String = "",
@@ -10,7 +23,7 @@ data class Cookie(
     var path: String = "/",
     var httpOnly: Boolean = true,
     var domain: String = "",
-    var sameSite: Boolean = true,
+    var sameSite: CookieSameSite? = null,
     var expires: Instant? = null,
 ) {
     val deleted: Boolean by lazy { value == "" && maxAge <= 0L }
