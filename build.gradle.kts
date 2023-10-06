@@ -4,6 +4,7 @@ import com.github.jk1.license.render.CsvReportRenderer
 import com.github.jk1.license.render.InventoryHtmlReportRenderer
 import com.github.jk1.license.render.InventoryMarkdownReportRenderer
 import com.github.jk1.license.render.ReportRenderer
+import org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
 
 /*
  * Main build script, responsible for:
@@ -25,7 +26,7 @@ plugins {
     id("org.jetbrains.dokka") version("1.9.0")
     id("com.github.jk1.dependency-license-report") version("2.5")
     id("org.jetbrains.kotlinx.binary-compatibility-validator") version("0.13.2")
-    id("org.graalvm.buildtools.native") version("0.9.25") apply(false)
+    id("org.graalvm.buildtools.native") version("0.9.27") apply(false)
     id("io.gitlab.arturbosch.detekt") version("1.23.1") apply(false)
     id("me.champeau.jmh") version("0.7.1") apply(false)
 }
@@ -137,6 +138,11 @@ gradle.taskGraph.whenReady(closureOf<TaskExecutionGraph> {
         }
     }
 })
+
+tasks.wrapper {
+    gradleVersion = "8.4"
+    distributionType = ALL
+}
 
 apiValidation {
     ignoredProjects.addAll(

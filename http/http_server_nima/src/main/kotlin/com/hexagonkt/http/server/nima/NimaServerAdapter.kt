@@ -14,11 +14,13 @@ import com.hexagonkt.http.server.HttpServer
 import com.hexagonkt.http.server.HttpServerFeature
 import com.hexagonkt.http.server.HttpServerFeature.ZIP
 import com.hexagonkt.http.server.HttpServerPort
-import io.helidon.common.http.Http.*
-import io.helidon.common.http.HttpMediaType
-import io.helidon.common.http.SetCookie
-import io.helidon.nima.webserver.WebServer
-import io.helidon.nima.webserver.http.ServerResponse
+import io.helidon.http.Method
+import io.helidon.http.Status
+import io.helidon.http.HeaderNames
+import io.helidon.http.HttpMediaType
+import io.helidon.http.SetCookie
+import io.helidon.webserver.WebServer
+import io.helidon.webserver.http.ServerResponse
 import java.security.SecureRandom
 import java.time.Duration
 import javax.net.ssl.KeyManagerFactory
@@ -97,7 +99,7 @@ class NimaServerAdapter : HttpServerPort {
             nimaResponse.status(Status.create(response.status.code))
 
             response.headers.values.forEach {
-                nimaResponse.header(Header.create(Header.create(it.name), it.strings()))
+                nimaResponse.header(HeaderNames.create(it.name), *it.strings().toTypedArray())
             }
 
             val headers = nimaResponse.headers()

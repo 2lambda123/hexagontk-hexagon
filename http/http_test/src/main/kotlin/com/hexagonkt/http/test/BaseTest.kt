@@ -1,6 +1,6 @@
 package com.hexagonkt.http.test
 
-import com.hexagonkt.core.encodeToBase64
+import com.hexagonkt.core.text.encodeToBase64
 import com.hexagonkt.core.logging.LoggingLevel.DEBUG
 import com.hexagonkt.core.logging.LoggingLevel.OFF
 import com.hexagonkt.core.logging.LoggingManager
@@ -15,7 +15,6 @@ import com.hexagonkt.http.server.HttpServer
 import com.hexagonkt.http.server.HttpServerPort
 import com.hexagonkt.http.server.HttpServerSettings
 import com.hexagonkt.http.handlers.HttpHandler
-import com.hexagonkt.logging.slf4j.jul.Slf4jJulLoggingAdapter
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.TestInstance
@@ -40,7 +39,6 @@ abstract class BaseTest {
     }
 
     @BeforeAll fun startUp() {
-        LoggingManager.adapter = Slf4jJulLoggingAdapter()
         LoggingManager.setLoggerLevel("com.hexagonkt", DEBUG)
         server.start()
         client.start()

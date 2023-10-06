@@ -2,7 +2,7 @@ package com.hexagonkt.core.media
 
 import com.hexagonkt.core.media.MediaTypeGroup.*
 import com.hexagonkt.core.urlOf
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import java.io.File
 import java.net.URI
 import kotlin.IllegalArgumentException
@@ -13,6 +13,12 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 
 internal class MediaTypesTest {
+
+    @Test fun `Media types utilities`() {
+        // mediaTypes
+        // TODO
+        // mediaTypes
+    }
 
     @Test fun `Parse correct media types`() {
         MediaType("*/*").apply {
@@ -96,6 +102,16 @@ internal class MediaTypesTest {
         assertEquals(
             "Media type not found for: 'file.baz' file",
             assertFailsWith<IllegalStateException> { mediaTypeOf(File("file.baz")) }.message
+        )
+
+        assertEquals(
+            "Media type not found for: 'file' path",
+            assertFailsWith<IllegalStateException> { mediaTypeOf(Path.of("file")) }.message
+        )
+
+        assertEquals(
+            "Media type not found for: 'file.baz' path",
+            assertFailsWith<IllegalStateException> { mediaTypeOf(Path.of("file.baz")) }.message
         )
 
         assertEquals(

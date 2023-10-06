@@ -4,7 +4,7 @@ import com.hexagonkt.core.logging.Logger
 import com.hexagonkt.core.logging.LoggingLevel
 import com.hexagonkt.core.logging.LoggingLevel.*
 import com.hexagonkt.core.logging.LoggingManager
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -47,7 +47,6 @@ internal class LogbackLoggerTest {
         logger.error { mapOf(0 to 1, 2 to 3) }
         logger.warn(RuntimeException()) { 'c' }
         logger.error(RuntimeException()) { 0..100 }
-        logger.flare { "message" }
     }
 
     private fun checkLoggerLevel(logger: Logger, level: LoggingLevel) {

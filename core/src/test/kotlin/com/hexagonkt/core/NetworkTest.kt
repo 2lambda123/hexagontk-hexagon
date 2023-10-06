@@ -1,12 +1,18 @@
 package com.hexagonkt.core
 
 import java.net.ServerSocket
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import java.net.InetAddress
 import java.util.*
 import kotlin.test.*
 
 internal class NetworkTest {
+
+    @Test fun `Network utilities`() {
+        // network
+        // TODO
+        // network
+    }
 
     // TODO Replace URL accesses by local started HTTP servers
     @Test fun `Check URL exists`() {

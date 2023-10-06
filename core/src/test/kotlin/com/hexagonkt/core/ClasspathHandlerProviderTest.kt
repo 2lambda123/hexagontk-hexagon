@@ -3,7 +3,7 @@ package com.hexagonkt.core
 import com.hexagonkt.core.logging.LoggingLevel
 import com.hexagonkt.core.logging.LoggingManager
 import org.junit.jupiter.api.BeforeAll
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import java.net.MalformedURLException
@@ -15,6 +15,16 @@ internal class ClasspathHandlerProviderTest {
     @BeforeAll fun registerHandler() {
         LoggingManager.setLoggerLevel("com.hexagonkt", LoggingLevel.TRACE)
         ClasspathHandler.registerHandler()
+    }
+
+    @Test fun `Classpath utilities`() {
+        // classpath
+        // TODO
+        // classpath
+
+        // resourceNotFound
+        // TODO
+        // resourceNotFound
     }
 
     @Test fun `Registering classpath handler twice does not fail`() {

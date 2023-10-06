@@ -26,14 +26,12 @@ import com.hexagonkt.http.server.HttpServerSettings
 import com.hexagonkt.http.server.callbacks.UrlCallback
 import com.hexagonkt.http.handlers.*
 import com.hexagonkt.http.server.serve
-import com.hexagonkt.logging.slf4j.jul.Slf4jJulLoggingAdapter
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import java.net.InetAddress
-import java.net.URI
 import kotlin.test.assertEquals
 
 @TestInstance(PER_CLASS)
@@ -44,7 +42,6 @@ abstract class SamplesTest(
 ) {
 
     @BeforeAll fun startUp() {
-        LoggingManager.adapter = Slf4jJulLoggingAdapter()
         LoggingManager.setLoggerLevel("com.hexagonkt", DEBUG)
     }
 
@@ -265,7 +262,8 @@ abstract class SamplesTest(
                 badRequest("400: incorrect request")
                 notFound("404: Missing resource")
                 created("201: Created")
-                redirect(FOUND_302, URI("/location"))
+                redirect(FOUND_302, "/location")
+                found("/location")
 
                 // The response can be modified chaining send calls (or its utility methods)
                 ok("Replacing headers").send(headers = Headers())
