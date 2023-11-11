@@ -140,25 +140,26 @@ How Hexagon fits in your architecture in a picture.
 # Ports
 Ports with their provided implementations (Adapters).
 
-| PORT                    | ADAPTERS                                           |
-|-------------------------|----------------------------------------------------|
-| [HTTP Server]           | [Netty], [Netty Epoll], [Jetty], [Servlet], [Nima] |
-| [HTTP Client]           | [Jetty][Jetty Client]                              |
-| [Templates]             | [Pebble], [FreeMarker], [Rocker]                   |
-| [Serialization Formats] | [JSON], [YAML], [CSV], [XML], [TOML]               |
+| PORT                    | ADAPTERS                                              |
+|-------------------------|-------------------------------------------------------|
+| [HTTP Server]           | [Netty], [Netty Epoll], [Jetty], [Servlet], [Helidon] |
+| [HTTP Client]           | [Jetty][Jetty Client]                                 |
+| [Templates]             | [Pebble], [FreeMarker], [Rocker], [jte]               |
+| [Serialization Formats] | [JSON], [YAML], [CSV], [XML], [TOML]                  |
 
 [HTTP Server]: /http_server
 [Netty]: /http_server_netty
 [Netty Epoll]: /http_server_netty_epoll
 [Jetty]: /http_server_jetty
 [Servlet]: /http_server_servlet
-[Nima]: /http_server_nima
+[Helidon]: /http_server_helidon
 [HTTP Client]: /http_client
 [Jetty Client]: /http_client_jetty
 [Templates]: /templates
 [Pebble]: /templates_pebble
 [FreeMarker]: /templates_freemarker
 [Rocker]: /templates_rocker
+[jte]: /templates_jte
 [Serialization Formats]: /core/#serialization
 [JSON]: /api/serialization_jackson_json/com.hexagonkt.serialization.jackson.json/-json
 [YAML]: /api/serialization_jackson_yaml/com.hexagonkt.serialization.jackson.yaml/-yaml
