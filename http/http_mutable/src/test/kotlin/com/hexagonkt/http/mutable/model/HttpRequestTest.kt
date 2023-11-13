@@ -189,52 +189,54 @@ internal class HttpRequestTest {
     }
 
     @Test fun `HTTP Request operators work ok`() {
-        httpRequestData().let {
-            val o = it.copy()
-            val header = Header("h", "v")
-            it + header
 
-            assertEquals(it, o.copy(headers = it.headers + header))
+        val header = Header("h", "v")
+        httpRequestCopy().let { (o, r) ->
+            r + header
+            assertEquals(r, o.copy(headers = o.headers + header))
         }
-//        assertEquals(
-//            httpRequest + Headers(header),
-//            httpRequest.copy(headers = httpRequest.headers + header)
-//        )
-//
-//        val queryParameter = QueryParameter("h", "v")
-//        assertEquals(
-//            httpRequest + queryParameter,
-//            httpRequest.copy(queryParameters = httpRequest.queryParameters + queryParameter)
-//        )
-//        assertEquals(
-//            httpRequest + QueryParameters(queryParameter),
-//            httpRequest.copy(queryParameters = httpRequest.queryParameters + queryParameter)
-//        )
-//
-//        val httpPart = HttpPart("h", "v")
-//        assertEquals(
-//            httpRequest + httpPart,
-//            httpRequest.copy(parts = httpRequest.parts + httpPart)
-//        )
-//        assertEquals(
-//            httpRequest + listOf(httpPart),
-//            httpRequest.copy(parts = httpRequest.parts + httpPart)
-//        )
-//
-//        val formParameter = FormParameter("h", "v")
-//        assertEquals(
-//            httpRequest + formParameter,
-//            httpRequest.copy(formParameters = httpRequest.formParameters + formParameter)
-//        )
-//        assertEquals(
-//            httpRequest + FormParameters(formParameter),
-//            httpRequest.copy(formParameters = httpRequest.formParameters + formParameter)
-//        )
-//
-//        val cookie = Cookie("n", "v")
-//        assertEquals(
-//            httpRequest + cookie,
-//            httpRequest.copy(cookies = httpRequest.cookies + cookie)
-//        )
+        httpRequestCopy().let { (o, r) ->
+            r + Headers(header)
+            assertEquals(r, o.copy(headers = o.headers + header))
+        }
+
+        val queryParameter = QueryParameter("h", "v")
+        httpRequestCopy().let { (o, r) ->
+            r + queryParameter
+            assertEquals(r, o.copy(queryParameters = o.queryParameters + queryParameter))
+        }
+        httpRequestCopy().let { (o, r) ->
+            r + QueryParameters(queryParameter)
+            assertEquals(r, o.copy(queryParameters = o.queryParameters + queryParameter))
+        }
+
+        val httpPart = HttpPart("h", "v")
+        httpRequestCopy().let { (o, r) ->
+            r + httpPart
+            assertEquals(r, o.copy(parts = o.parts + httpPart))
+        }
+        httpRequestCopy().let { (o, r) ->
+            r + listOf(httpPart)
+            assertEquals(r, o.copy(parts = o.parts + httpPart))
+        }
+
+        val formParameter = FormParameter("h", "v")
+        httpRequestCopy().let { (o, r) ->
+            r + formParameter
+            assertEquals(r, o.copy(formParameters = o.formParameters + formParameter))
+        }
+        httpRequestCopy().let { (o, r) ->
+            r + FormParameters(formParameter)
+            assertEquals(r, o.copy(formParameters = o.formParameters + formParameter))
+        }
+
+        val cookie = Cookie("n", "v")
+        httpRequestCopy().let { (o, r) ->
+            r + cookie
+            assertEquals(r, o.copy(cookies = o.cookies + cookie))
+        }
     }
+
+    private fun httpRequestCopy(): Pair<HttpRequest, HttpRequest> =
+        httpRequestData().let { it.copy() to it }
 }

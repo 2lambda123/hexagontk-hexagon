@@ -1,11 +1,9 @@
 package com.hexagonkt.http.mutable.model
 
 import com.hexagonkt.core.media.TEXT_HTML
-import com.hexagonkt.core.media.TEXT_RICHTEXT
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertNotEquals
 
 internal class HttpResponseTest {
 
@@ -33,26 +31,28 @@ internal class HttpResponseTest {
     }
 
     @Test fun `HTTP Response operators work ok`() {
-        val httpResponse = httpResponseData()
 
-//        val header = Header("h", "v")
-//        assertEquals(
-//            httpResponse + header,
-//            httpResponse.copy(headers = httpResponse.headers + header)
-//        )
-//        assertEquals(
-//            httpResponse + Headers(header),
-//            httpResponse.copy(headers = httpResponse.headers + header)
-//        )
-//
-//        val cookie = Cookie("n", "v")
-//        assertEquals(
-//            httpResponse + cookie,
-//            httpResponse.copy(cookies = httpResponse.cookies + cookie)
-//        )
-//        assertEquals(
-//            httpResponse + listOf(cookie),
-//            httpResponse.copy(cookies = httpResponse.cookies + cookie)
-//        )
+        val header = Header("h", "v")
+        httpResponseCopy().let { (o, r) ->
+            r + header
+            assertEquals(r, o.copy(headers = o.headers + header))
+        }
+        httpResponseCopy().let { (o, r) ->
+            r + Headers(header)
+            assertEquals(r, o.copy(headers = o.headers + header))
+        }
+
+        val cookie = Cookie("n", "v")
+        httpResponseCopy().let { (o, r) ->
+            r + cookie
+            assertEquals(r, o.copy(cookies = o.cookies + cookie))
+        }
+        httpResponseCopy().let { (o, r) ->
+            r + listOf(cookie)
+            assertEquals(r, o.copy(cookies = o.cookies + cookie))
+        }
     }
+
+    private fun httpResponseCopy(): Pair<HttpResponse, HttpResponse> =
+        httpResponseData().let { it.copy() to it }
 }
