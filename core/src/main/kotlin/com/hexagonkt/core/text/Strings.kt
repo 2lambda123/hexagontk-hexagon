@@ -4,7 +4,6 @@ import com.hexagonkt.core.urlOf
 import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream
-import java.lang.System.getProperty
 import java.net.InetAddress
 import java.net.URI
 import java.net.URL
@@ -23,7 +22,7 @@ private val base64Encoder: Base64.Encoder by lazy { Base64.getEncoder().withoutP
 private val base64Decoder: Base64.Decoder by lazy { Base64.getDecoder() }
 
 /** Runtime specific end of line. */
-val eol: String by lazy { getProperty("line.separator") }
+val eol: String by lazy { System.lineSeparator() }
 
 /** Supported types for the [parseOrNull] function. */
 val parsedClasses: Set<KClass<*>> by lazy {
@@ -65,7 +64,7 @@ fun String.filterVars(parameters: Map<*, *>): String =
     )
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param prefix .
@@ -106,7 +105,7 @@ fun String.decodeBase64(): ByteArray =
     base64Decoder.decode(this)
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param T .
@@ -137,7 +136,7 @@ fun <T : Any> String.parse(type: KClass<T>): T =
     } as T
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param T .
@@ -159,7 +158,7 @@ fun String.stripAnsi(): String =
     replace(Ansi.REGEX, "")
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @return .
@@ -168,7 +167,7 @@ fun String.toStream(): InputStream =
     ByteArrayInputStream(this.toByteArray())
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param count .
@@ -179,7 +178,7 @@ fun String.prependIndent(count: Int = 4, pad: String = " "): String =
     this.prependIndent(pad.repeat(count))
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param T .
@@ -190,7 +189,7 @@ fun <T : Enum<*>> String.toEnum(converter: (String) -> T): T =
     uppercase().replace(" ", "_").let(converter)
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param T .
@@ -206,7 +205,7 @@ fun <T : Enum<*>> String.toEnumOrNull(converter: (String) -> T): T? =
     }
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @param text .
@@ -237,7 +236,7 @@ fun String.banner(bannerDelimiter: String = "*"): String =
 // TODO These and other implemented methods can fit in a Effects.kt file
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @receiver .
  * @return .
@@ -246,7 +245,7 @@ fun String.stripAccents(): String =
     Normalizer.normalize(this, NFD).replace("\\p{M}".toRegex(), "")
 
 /**
- * [TODO](https://github.com/hexagonkt/hexagon/issues/271).
+ * [TODO](https://github.com/hexagontk/hexagon/issues/271).
  *
  * @param bytes .
  * @return .

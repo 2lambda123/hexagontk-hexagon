@@ -1,3 +1,6 @@
+/*
+ * Check usage information at: http://hexagontk.com/gradle/#native
+ */
 
 apply(plugin: "org.graalvm.buildtools.native")
 

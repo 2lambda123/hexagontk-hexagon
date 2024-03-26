@@ -17,7 +17,7 @@ import com.hexagonkt.http.model.HttpProtocol.HTTPS
 import com.hexagonkt.http.model.INTERNAL_SERVER_ERROR_500
 import com.hexagonkt.http.model.OK_200
 import com.hexagonkt.http.server.*
-import com.hexagonkt.http.handlers.HttpCallback
+import com.hexagonkt.http.handlers.HttpCallbackType
 import com.hexagonkt.http.handlers.HttpHandler
 import com.hexagonkt.http.handlers.path
 import com.hexagonkt.http.test.BaseTest
@@ -26,6 +26,7 @@ import com.hexagonkt.serialization.SerializationManager
 import com.hexagonkt.serialization.serialize
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.condition.DisabledOnOs
+import org.junit.jupiter.api.condition.OS.MAC
 import org.junit.jupiter.api.condition.OS.WINDOWS
 
 import java.math.BigInteger
@@ -42,7 +43,7 @@ abstract class ClientTest(
     final override val serverSettings: HttpServerSettings = HttpServerSettings(),
 ) : BaseTest() {
 
-    private var callback: HttpCallback = { this }
+    private var callback: HttpCallbackType = { this }
 
     override val handler: HttpHandler = path {
         post("*") { callback() }
@@ -387,13 +388,13 @@ abstract class ClientTest(
     }
 
     @Test
-    @DisabledOnOs(WINDOWS) // TODO Make this work on GitHub runners
+    @DisabledOnOs(WINDOWS, MAC) // TODO Make this work on GitHub runners
     fun `Request HTTPS example`() {
 
         val serverAdapter = serverAdapter()
 
         // Key store files
-        val identity = "hexagonkt.p12"
+        val identity = "hexagontk.p12"
         val trust = "trust.p12"
 
         // Default passwords are file name reversed
@@ -434,7 +435,7 @@ abstract class ClientTest(
         client.start()
         client.get("/hello").apply {
             // Assure the certificate received (and returned) by the server is correct
-            assert(headers.require("cert").string()?.startsWith("CN=hexagonkt.com") ?: false)
+            assert(headers.require("cert").string()?.startsWith("CN=hexagontk.com") ?: false)
             assertEquals(body, "Hello World!")
         }
 

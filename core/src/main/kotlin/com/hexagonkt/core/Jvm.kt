@@ -1,5 +1,6 @@
 package com.hexagonkt.core
 
+import com.hexagonkt.core.text.SNAKE_CASE
 import com.hexagonkt.core.text.parseOrNull
 import java.io.Console
 import java.net.InetAddress
@@ -13,7 +14,7 @@ import kotlin.reflect.KClass
  * Object with utilities to gather information about the running JVM.
  */
 object Jvm {
-    private val systemSettingPattern: Regex by lazy { Regex("[a-zA-Z_]+[a-zA-Z0-9_]*") }
+    private val systemSettingPattern: Regex by lazy { SNAKE_CASE }
 
     /** Operating system name ('os.name' property). If `null` throws an exception. */
     val os: String by lazy { os() }
@@ -83,30 +84,28 @@ object Jvm {
     fun usedMemory(): String =
         (runtime.totalMemory() - runtime.freeMemory()).let { "%,d".format(it / 1024) }
 
-    fun loadSystemSettings(settings: Map<String, String>, overwrite: Boolean = false) {
-        settings.keys.forEach {
-            check(it.matches(systemSettingPattern)) {
-                "Property name must match $systemSettingPattern ($it)"
-            }
+    /**
+     * Add a map to system properties, overriding entries if already set.
+     *
+     * @param settings Data to be added to system properties.
+     */
+    fun loadSystemSettings(settings: Map<String, String>) {
+        settings.entries.forEach { (k, v) ->
+            val matchPattern = k.matches(systemSettingPattern)
+            check(matchPattern) { "Property name must match $systemSettingPattern ($k)" }
+            System.setProperty(k, v)
         }
-
-        val systemProperties = System.getProperties()
-        val properties =
-            if (overwrite) settings.entries
-            else settings.entries.filter { !systemProperties.containsKey(it.key) }
-
-        properties.forEach { (k, v) -> System.setProperty(k, v) }
     }
 
     /**
-     * Retrieve a setting by name by looking in the JVM system properties first and in OS
-     * environment variables if not found.
+     * Retrieve a setting by name by looking in OS environment variables first and in the JVM system
+     * properties if not found.
      *
      * @param type Type of the requested parameter. Supported types are: boolean, int, long, float,
      *   double and string, throw an error if other type is supplied.
      * @param name Name of the searched parameter, can not be blank.
      * @return Value of the searched parameter in the requested type, `null` if the parameter is not
-     *   found on the JVM system properties and in OS environment variables.
+     *   found on the OS environment variables or in JVM system properties.
      */
     fun <T: Any> systemSettingOrNull(type: KClass<T>, name: String): T? =
         systemSettingRaw(name).let { it.parseOrNull(type) }
@@ -115,9 +114,12 @@ object Jvm {
         systemSettingOrNull(type, name)
             ?: error("Required '${type.simpleName}' system setting '$name' not found")
 
+    fun <T: Any> systemSetting(type: KClass<T>, name: String, defaultValue: T): T =
+        systemSettingOrNull(type, name) ?: defaultValue
+
     /**
-     * Retrieve a flag (boolean parameter) by name by looking in the JVM system properties first and
-     * in OS environment variables if not found.
+     * Retrieve a flag (boolean parameter) by name by looking in OS environment variables first and
+     * in the JVM system properties if not found.
      *
      * @param name Name of the searched parameter, can not be blank.
      * @return True if the parameter is found and its value is exactly 'true', false otherwise.
@@ -132,7 +134,7 @@ object Jvm {
      *   double and string, throw an error if other type is supplied.
      * @param name Name of the searched parameter, can not be blank.
      * @return Value of the searched parameter in the requested type, `null` if the parameter is not
-     *   found on the JVM system properties and in OS environment variables.
+     *   found on the OS environment variables or in JVM system properties.
      */
     inline fun <reified T: Any> systemSettingOrNull(name: String): T? =
         systemSettingOrNull(T::class, name)
@@ -140,10 +142,13 @@ object Jvm {
     inline fun <reified T: Any> systemSetting(name: String): T =
         systemSetting(T::class, name)
 
+    inline fun <reified T: Any> systemSetting(name: String, defaultValue: T): T =
+        systemSetting(T::class, name, defaultValue)
+
     private fun systemSettingRaw(name: String): String? {
         val correctName = name.matches(systemSettingPattern)
         require(correctName) { "Setting name must match $systemSettingPattern" }
-        return System.getProperty(name, System.getenv(name))
+        return System.getenv(name) ?: System.getenv(name.uppercase()) ?: System.getProperty(name)
     }
 
     /** Operating system name ('os.name' property). If `null` throws an exception. */

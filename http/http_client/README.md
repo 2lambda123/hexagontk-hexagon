@@ -40,8 +40,8 @@ Check this code snippet to get a glimpse on how to send the most general request
 
 @code http/http_test/src/main/kotlin/com/hexagonkt/http/test/examples/ClientTest.kt?genericRequest
 
-[Request]: /api/http_client/com.hexagonkt.http.client.model/-http-client-request
-[Response]: /api/http_client/com.hexagonkt.http.client.model/-http-client-response
+[Request]: /api/http/http/com.hexagonkt.http.model/-http-request
+[Response]: /api/http/http/com.hexagonkt.http.model/-http-response
 
 # Simple requests shortcuts
 There are utility methods to make the most common request in an easy way.
@@ -63,7 +63,7 @@ Check the details in the following code fragment:
 
 You can also check the [full test] for more details.
 
-[full test]: https://github.com/hexagonkt/hexagon/blob/master/http/http_test/src/main/kotlin/com/hexagonkt/http/test/examples/CookiesTest.kt
+[full test]: https://github.com/hexagontk/hexagon/blob/master/http/http_test/src/main/kotlin/com/hexagonkt/http/test/examples/CookiesTest.kt
 
 # Multipart (forms and files)
 Using the HTTP client you can send MIME multipart parts to the server. You can use it to post forms
@@ -89,8 +89,8 @@ format.
 To set up client/server certificates, you need to include [SslSettings] in your [ClientSettings]. In
 the sections below you can see how to configure these parameters.
 
-[SslSettings]: /api/http/com.hexagonkt.http/-ssl-settings
-[ClientSettings]: /api/http_client/com.hexagonkt.http.client/-http-client-settings
+[SslSettings]: /api/http/http/com.hexagonkt.http/-ssl-settings
+[ClientSettings]: /api/http/http_client/com.hexagonkt.http.client/-http-client-settings
 
 ## Key Store
 This store holds the identity certificate, this certificate is presented to the server by the client

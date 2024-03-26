@@ -104,7 +104,7 @@ Module that provide functionality that does not depend on different implementati
 [handlers].
 
 ## Manager
-Singleton object to manage a cross toolkit aspect. I.e., Serialization, Logging or Templates.
+Singleton object to manage a cross toolkit aspect. I.e., Serialization or Templates.
 
 [core]: /core
 [handlers]: /handlers
@@ -119,12 +119,11 @@ Singleton object to manage a cross toolkit aspect. I.e., Serialization, Logging 
 The libraries inside the `hexagon_extra` repository provide extra features. They may be useful to
 develop applications, but not strictly required. Some of these modules are:
 
-* [Schedulers]: Provides repeated tasks execution based on [Cron] expressions.
-* [Models]: Contain classes that model common data objects.
+* Schedulers: Provides repeated tasks execution based on [Cron] expressions.
+* Models: Contain classes that model common data objects.
+* Args: Command line arguments definition and parsing.
 
 [Web]: /web
-[Schedulers]: /scheduler
-[Models]: /models
 [Cron]: https://en.wikipedia.org/wiki/Cron
 
 # Architecture
@@ -161,11 +160,11 @@ Ports with their provided implementations (Adapters).
 [Rocker]: /templates_rocker
 [jte]: /templates_jte
 [Serialization Formats]: /core/#serialization
-[JSON]: /api/serialization_jackson_json/com.hexagonkt.serialization.jackson.json/-json
-[YAML]: /api/serialization_jackson_yaml/com.hexagonkt.serialization.jackson.yaml/-yaml
-[CSV]: /api/serialization_jackson_csv/com.hexagonkt.serialization.jackson.csv/-csv
-[XML]: /api/serialization_jackson_xml/com.hexagonkt.serialization.jackson.xml/-xml
-[TOML]: /api/serialization_jackson_toml/com.hexagonkt.serialization.jackson.toml/-toml
+[JSON]: /api/serialization/serialization_jackson_json/com.hexagonkt.serialization.jackson.json/-json
+[YAML]: /api/serialization/serialization_jackson_yaml/com.hexagonkt.serialization.jackson.yaml/-yaml
+[CSV]: /api/serialization/serialization_jackson_csv/com.hexagonkt.serialization.jackson.csv/-csv
+[XML]: /api/serialization/serialization_jackson_xml/com.hexagonkt.serialization.jackson.xml/-xml
+[TOML]: /api/serialization/serialization_jackson_toml/com.hexagonkt.serialization.jackson.toml/-toml
 
 # Module Dependencies
 Module dependencies (including extra modules):
@@ -178,7 +177,10 @@ graph TD
   http_client -->|uses| http_handlers
   web -->|uses| http_server
   web -->|uses| templates
-  rest -->|uses| http_server
+  rest -->|uses| http_handlers
   rest -->|uses| serialization
   rest_tools -->|uses| rest
+  rest_tools -->|uses| http_server
+  rest_tools -->|uses| http_client
+  serverless_http -->|uses| http_handlers
 ```
