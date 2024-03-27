@@ -26,35 +26,35 @@ data class HttpContext(
     val request: HttpRequestPort = event.request
     val response: HttpResponsePort = event.response
 
-    val method: HttpMethod by lazy { request.method }
-    val protocol: HttpProtocol by lazy { request.protocol }
-    val host: String by lazy { request.host }
-    val port: Int by lazy { request.port }
-    val path: String by lazy { request.path }
-    val queryParameters: QueryParameters by lazy { request.queryParameters }
-    val parts: List<HttpPart> by lazy { request.parts }
-    val formParameters: FormParameters by lazy { request.formParameters }
-    val accept: List<ContentType> by lazy { request.accept }
-    val authorization: Authorization? by lazy { request.authorization }
-    val certificateChain: List<X509Certificate> by lazy { request.certificateChain }
+    val method: HttpMethod get() = request.method
+    val protocol: HttpProtocol get() = request.protocol
+    val host: String get() = request.host
+    val port: Int get() = request.port
+    val path: String get() = request.path
+    val queryParameters: QueryParameters get() = request.queryParameters
+    val parts: List<HttpPart> get() = request.parts
+    val formParameters: FormParameters get() = request.formParameters
+    val accept: List<ContentType> get() = request.accept
+    val authorization: Authorization? get() = request.authorization
+    val certificateChain: List<X509Certificate> get() = request.certificateChain
 
-    val partsMap: Map<String, HttpPart> by lazy { request.partsMap() }
-    val url: URL by lazy { request.url() }
-    val userAgent: String? by lazy { request.userAgent() }
-    val referer: String? by lazy { request.referer() }
-    val origin: String? by lazy { request.origin() }
-    val certificate: X509Certificate? by lazy { request.certificate() }
+    val partsMap: Map<String, HttpPart> get() = request.partsMap()
+    val url: URL get() = request.url()
+    val userAgent: String? get() = request.userAgent()
+    val referer: String? get() = request.referer()
+    val origin: String? get() = request.origin()
+    val certificate: X509Certificate? get() = request.certificate()
 
-    val status: HttpStatus = response.status
+    val status: HttpStatus get() = response.status
 
-    val pathParameters: Map<String, String> by lazy {
+    val pathParameters: Map<String, String> get() {
         val httpHandler = predicate as HttpPredicate
         val pattern = httpHandler.pathPattern
 
         if (assertEnabled)
             check(!pattern.prefix) { "Loading path parameters not allowed for paths" }
 
-        pattern.extractParameters(request.path)
+        return pattern.extractParameters(request.path)
     }
 
     constructor(context: Context<HttpCall>) : this(
@@ -258,6 +258,7 @@ data class HttpContext(
 
     fun send(response: HttpResponsePort, attributes: Map<*, *> = this.attributes) {
         this.event.response.status = response.status
+        this.event.response.body = response.body
 
         this.event.response.contentLength = response.contentLength
 
