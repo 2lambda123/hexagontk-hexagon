@@ -5,6 +5,7 @@ import com.hexagonkt.http.model.*
 import com.hexagonkt.http.model.HttpCall
 
 sealed interface HttpHandler : Handler<HttpCall> {
+    override val parent: HttpHandler?
     val handlerPredicate: HttpPredicate
 
     fun addPrefix(prefix: String): HttpHandler

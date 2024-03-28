@@ -3,6 +3,7 @@ package com.hexagonkt.handlers
 data class ChainHandler<T : Any>(
     val handlers: List<Handler<T>>,
     override val predicate: (Context<T>) -> Boolean = { true },
+    override val parent: Handler<T>? = null,
 ) : Handler<T> {
 
     override val callback: (Context<T>) -> Context<T> = { it }
@@ -11,6 +12,11 @@ data class ChainHandler<T : Any>(
         filter: (Context<T>) -> Boolean,
         vararg handlers: Handler<T>,
     ) : this(handlers.toList(), filter)
+
+    constructor(
+        handlers: List<Handler<T>>,
+        filter: (Context<T>) -> Boolean,
+    ) : this(handlers, filter, null)
 
     constructor(vararg handlers: Handler<T>) : this(handlers.toList(), { true })
 

@@ -9,6 +9,9 @@ import com.hexagonkt.http.model.HttpCall
 interface HttpController : HttpHandler {
     val handler: HttpHandler
 
+    override val parent: HttpHandler?
+        get() = handler.parent
+
     override val handlerPredicate: HttpPredicate
         get() = handler.handlerPredicate
 
