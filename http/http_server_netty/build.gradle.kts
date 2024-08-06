@@ -21,6 +21,7 @@ dependencies {
     "api"("io.netty:netty-tcnative-boringssl-static:$nettyTcNativeVersion")
 
     "testImplementation"(project(":http:http_test"))
+    "testImplementation"(project(":http:http_client_java"))
     "testImplementation"(project(":http:http_client_jetty_ws"))
     "testImplementation"(project(":serialization:serialization_jackson_json"))
     "testImplementation"(project(":serialization:serialization_jackson_yaml"))

@@ -1,10 +1,12 @@
 package com.hexagonkt.http.server.netty
 
+import com.hexagonkt.http.client.java.JavaClientAdapter
 import com.hexagonkt.http.client.jetty.ws.JettyWsClientAdapter
 import com.hexagonkt.http.test.examples.*
 import com.hexagonkt.serialization.jackson.JacksonTextFormat
 import com.hexagonkt.serialization.jackson.json.Json
 import com.hexagonkt.serialization.jackson.yaml.Yaml
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.condition.DisabledInNativeImage
 import org.junit.jupiter.api.condition.DisabledOnOs
 import org.junit.jupiter.api.condition.OS.MAC
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.condition.OS.WINDOWS
 // TODO Assert context methods (request.method, request.protocol...)
 // TODO Check response headers don't contain invalid chars (\n, \t...)
 
+val javaClientAdapter: () -> JavaClientAdapter = ::JavaClientAdapter
 val clientAdapter: () -> JettyWsClientAdapter = ::JettyWsClientAdapter
 val serverAdapter: () -> NettyServerAdapter = ::NettyServerAdapter
 val formats: List<JacksonTextFormat> = listOf(Json, Yaml)
@@ -27,6 +30,8 @@ internal class AdapterClientHttpsTest : ClientHttpsTest(clientAdapter, serverAda
 internal class AdapterClientMultipartTest : ClientMultipartTest(clientAdapter, serverAdapter, formats)
 @DisabledOnOs(WINDOWS, MAC) // TODO Make this work on GitHub runners
 internal class AdapterHttpsTest : HttpsTest(clientAdapter, serverAdapter)
+@Disabled // TODO
+internal class AdapterHttp2Test : Http2Test(javaClientAdapter, serverAdapter)
 internal class AdapterZipTest : ZipTest(clientAdapter, serverAdapter)
 internal class AdapterCookiesTest : CookiesTest(clientAdapter, serverAdapter)
 internal class AdapterFilesTest : FilesTest(clientAdapter, serverAdapter)

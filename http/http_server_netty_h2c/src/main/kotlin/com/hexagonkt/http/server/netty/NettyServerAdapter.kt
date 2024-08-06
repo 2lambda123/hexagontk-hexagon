@@ -2,8 +2,7 @@ package com.hexagonkt.http.server.netty
 
 import com.hexagonkt.core.Jvm
 import com.hexagonkt.core.fieldsMapOf
-import com.hexagonkt.core.security.createKeyManagerFactory
-import com.hexagonkt.core.security.createTrustManagerFactory
+import com.hexagonkt.core.security.loadKeyStore
 import com.hexagonkt.http.SslSettings
 import com.hexagonkt.http.model.HttpProtocol
 import com.hexagonkt.http.model.HttpProtocol.*
@@ -16,17 +15,25 @@ import com.hexagonkt.http.handlers.HttpHandler
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
+import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
 import io.netty.handler.codec.http.*
+import io.netty.handler.codec.http.HttpServerUpgradeHandler.UpgradeCodecFactory
+import io.netty.handler.codec.http2.*
+import io.netty.handler.codec.http2.Http2CodecUtil.HTTP_UPGRADE_PROTOCOL_NAME
 import io.netty.handler.ssl.ClientAuth.OPTIONAL
 import io.netty.handler.ssl.ClientAuth.REQUIRE
 import io.netty.handler.ssl.SslContext
 import io.netty.handler.ssl.SslContextBuilder
+import io.netty.handler.stream.ChunkedWriteHandler
+import io.netty.util.AsciiString
 import io.netty.util.concurrent.DefaultEventExecutorGroup
+import io.netty.util.concurrent.EventExecutorGroup
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.net.ssl.KeyManagerFactory
 import javax.net.ssl.TrustManagerFactory
+import kotlin.Int.Companion.MAX_VALUE
 
 /**
  * Implements [HttpServerPort] using Netty [Channel].
@@ -40,10 +47,6 @@ open class NettyServerAdapter(
     private val soKeepAlive: Boolean = true,
     private val shutdownQuietSeconds: Long = 0,
     private val shutdownTimeoutSeconds: Long = 0,
-    private val keepAliveHandler: Boolean = true,
-    private val httpAggregatorHandler: Boolean = true,
-    private val chunkedHandler: Boolean = true,
-    private val enableWebsockets: Boolean = true,
 ) : HttpServerPort {
 
     private var nettyChannel: Channel? = null
@@ -59,10 +62,6 @@ open class NettyServerAdapter(
         soKeepAlive = true,
         shutdownQuietSeconds = 0,
         shutdownTimeoutSeconds = 0,
-        keepAliveHandler = true,
-        httpAggregatorHandler = true,
-        chunkedHandler = true,
-        enableWebsockets = true,
     )
 
     override fun runtimePort(): Int =
@@ -100,7 +99,7 @@ open class NettyServerAdapter(
             bossEventLoop = bossGroup
             workerEventLoop = workerGroup
         }
-        catch (_: Exception) {
+        catch (e: Exception) {
             bossGroup.shutdownGracefully()
             workerGroup.shutdownGracefully()
             executorGroup?.shutdownGracefully()
@@ -130,15 +129,7 @@ open class NettyServerAdapter(
         when {
             sslSettings != null -> sslInitializer(sslSettings, handlers, group, settings)
             settings.protocol == H2C -> H2CChannelInitializer(handlers, group, settings)
-            else -> HttpChannelInitializer(
-                handlers,
-                group,
-                settings,
-                keepAliveHandler,
-                httpAggregatorHandler,
-                chunkedHandler,
-                enableWebsockets,
-            )
+            else -> HttpChannelInitializer(handlers, group, settings)
         }
 
     private fun sslInitializer(
@@ -147,39 +138,40 @@ open class NettyServerAdapter(
         group: DefaultEventExecutorGroup?,
         settings: HttpServerSettings
     ): HttpsChannelInitializer =
-        HttpsChannelInitializer(
-            handlers,
-            sslContext(sslSettings),
-            sslSettings,
-            group,
-            settings,
-            keepAliveHandler,
-            httpAggregatorHandler,
-            chunkedHandler,
-            enableWebsockets,
-        )
+        HttpsChannelInitializer(handlers, sslContext(sslSettings), sslSettings, group, settings)
 
     private fun sslContext(sslSettings: SslSettings): SslContext {
-        val keyManager = keyManagerFactory(sslSettings)
+        val keyManager = createKeyManagerFactory(sslSettings)
 
         val sslContextBuilder = SslContextBuilder
             .forServer(keyManager)
             .clientAuth(if (sslSettings.clientAuth) REQUIRE else OPTIONAL)
 
-        val trustManager = trustManagerFactory(sslSettings)
+        val trustManager = createTrustManagerFactory(sslSettings)
 
         return if (trustManager == null) sslContextBuilder.build()
             else sslContextBuilder.trustManager(trustManager).build()
     }
 
-    private fun trustManagerFactory(sslSettings: SslSettings): TrustManagerFactory? {
+    private fun createTrustManagerFactory(sslSettings: SslSettings): TrustManagerFactory? {
         val trustStoreUrl = sslSettings.trustStore ?: return null
-        return createTrustManagerFactory(trustStoreUrl, sslSettings.trustStorePassword)
+
+        val trustStorePassword = sslSettings.trustStorePassword
+        val trustStore = loadKeyStore(trustStoreUrl, trustStorePassword)
+        val trustAlgorithm = TrustManagerFactory.getDefaultAlgorithm()
+        val trustManager = TrustManagerFactory.getInstance(trustAlgorithm)
+
+        trustManager.init(trustStore)
+        return trustManager
     }
 
-    private fun keyManagerFactory(sslSettings: SslSettings): KeyManagerFactory {
+    private fun createKeyManagerFactory(sslSettings: SslSettings): KeyManagerFactory {
         val keyStoreUrl = sslSettings.keyStore ?: error("")
-        return createKeyManagerFactory(keyStoreUrl, sslSettings.keyStorePassword)
+        val keyStorePassword = sslSettings.keyStorePassword
+        val keyStore = loadKeyStore(keyStoreUrl, keyStorePassword)
+        val keyManager = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+        keyManager.init(keyStore, keyStorePassword.toCharArray())
+        return keyManager
     }
 
     override fun shutDown() {
@@ -208,9 +200,96 @@ open class NettyServerAdapter(
             NettyServerAdapter::soKeepAlive to soKeepAlive,
             NettyServerAdapter::shutdownQuietSeconds to shutdownQuietSeconds,
             NettyServerAdapter::shutdownTimeoutSeconds to shutdownTimeoutSeconds,
-            NettyServerAdapter::keepAliveHandler to keepAliveHandler,
-            NettyServerAdapter::httpAggregatorHandler to httpAggregatorHandler,
-            NettyServerAdapter::chunkedHandler to chunkedHandler,
-            NettyServerAdapter::enableWebsockets to enableWebsockets,
         )
+
+    class HttpChannelInitializer(
+        private val handlers: Map<HttpMethod, HttpHandler>,
+        private val executorGroup: EventExecutorGroup?,
+        private val settings: HttpServerSettings,
+    ) : ChannelInitializer<SocketChannel>() {
+
+        override fun initChannel(channel: SocketChannel) {
+            val pipeline = channel.pipeline()
+
+            pipeline.addLast(HttpServerCodec())
+            pipeline.addLast(HttpServerKeepAliveHandler())
+            pipeline.addLast(HttpObjectAggregator(MAX_VALUE))
+            pipeline.addLast(ChunkedWriteHandler())
+
+            if (settings.zip)
+                pipeline.addLast(HttpContentCompressor())
+
+            if (executorGroup == null)
+                pipeline.addLast(NettyServerHandler(handlers, null))
+            else
+                pipeline.addLast(executorGroup, NettyServerHandler(handlers, null))
+        }
+    }
+
+    class HttpsChannelInitializer(
+        private val handlers: Map<HttpMethod, HttpHandler>,
+        private val sslContext: SslContext,
+        private val sslSettings: SslSettings,
+        private val executorGroup: EventExecutorGroup?,
+        private val settings: HttpServerSettings,
+    ) : ChannelInitializer<SocketChannel>() {
+
+        override fun initChannel(channel: SocketChannel) {
+            val pipeline = channel.pipeline()
+            val sslHandler = sslContext.newHandler(channel.alloc())
+            val handlerSsl = if (sslSettings.clientAuth) sslHandler else null
+
+            pipeline.addLast(sslHandler)
+            pipeline.addLast(HttpServerCodec())
+            pipeline.addLast(HttpServerKeepAliveHandler())
+            pipeline.addLast(HttpObjectAggregator(MAX_VALUE))
+            pipeline.addLast(ChunkedWriteHandler())
+
+            if (settings.zip)
+                pipeline.addLast(HttpContentCompressor())
+
+            if (executorGroup == null)
+                pipeline.addLast(NettyServerHandler(handlers, handlerSsl))
+            else
+                pipeline.addLast(executorGroup, NettyServerHandler(handlers, handlerSsl))
+        }
+    }
+
+    class H2CChannelInitializer(
+        private val handlers: Map<HttpMethod, HttpHandler>,
+        private val executorGroup: EventExecutorGroup?,
+        private val settings: HttpServerSettings,
+    ) : ChannelInitializer<SocketChannel>() {
+
+        override fun initChannel(channel: SocketChannel) {
+            val pipeline = channel.pipeline()
+            val sourceCodec = HttpServerCodec()
+            val connection = DefaultHttp2Connection(true)
+
+            val listener = InboundHttp2ToHttpAdapterBuilder(connection)
+                .propagateSettings(true)
+                .maxContentLength(MAX_VALUE)
+                .build()
+
+            val http2Handler = HttpToHttp2ConnectionHandlerBuilder()
+                .connection(connection)
+                .frameListener(listener)
+                .build()
+
+            val upgradeCodecFactory = UpgradeCodecFactory { protocol ->
+                if (AsciiString.contentEquals(HTTP_UPGRADE_PROTOCOL_NAME, protocol))
+                    Http2ServerUpgradeCodec(http2Handler)
+                else
+                    null
+            }
+
+            val upgradeHandler = HttpServerUpgradeHandler(sourceCodec, upgradeCodecFactory, MAX_VALUE)
+
+            val cleartextHttp2ServerUpgradeHandler =
+                CleartextHttp2ServerUpgradeHandler(sourceCodec, upgradeHandler, http2Handler)
+
+            pipeline.addLast(cleartextHttp2ServerUpgradeHandler)
+//            pipeline.addLast(NettyServerHandler(handlers, null))
+        }
+    }
 }
