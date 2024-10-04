@@ -3,14 +3,14 @@
 This module holds HTTP classes and utilities independent of third party libraries and shared among
 HTTP clients and HTTP servers.
 
-# Package com.hexagonkt.http
+# Package com.hexagontk.http
 HTTP code shared between clients and servers.
 
-# Package com.hexagonkt.http.model
+# Package com.hexagontk.http.model
 TODO
 
-# Package com.hexagonkt.http.model.ws
+# Package com.hexagontk.http.model.ws
 TODO
 
-# Package com.hexagonkt.http.patterns
+# Package com.hexagontk.http.patterns
 TODO

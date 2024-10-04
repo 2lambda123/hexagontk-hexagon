@@ -2,7 +2,7 @@
 # Module templates_jte
 [jte] template engine adapter for Hexagon.
 
-For usage instructions, refer to the [Templates Port documentation](/templates/).
+For usage instructions, refer to the [Templates Port documentation](templates.md).
 
 [jte]: https://jte.gg
 
@@ -15,14 +15,14 @@ For usage instructions, refer to the [Templates Port documentation](/templates/)
         mavenCentral()
     }
 
-    implementation("com.hexagonkt:templates_jte:$hexagonVersion")
+    implementation("com.hexagontk:templates_jte:$hexagonVersion")
     ```
 
 === "pom.xml"
 
     ```xml
     <dependency>
-      <groupId>com.hexagonkt</groupId>
+      <groupId>com.hexagontk</groupId>
       <artifactId>templates_jte</artifactId>
       <version>$hexagonVersion</version>
     </dependency>
@@ -59,5 +59,5 @@ jte {
 * Test file loaded templates
 * Test plain test templates
 
-# Package com.hexagonkt.templates.jte
+# Package com.hexagontk.templates.jte
 Classes that implement the Templates Port interface with the [jte] engine.

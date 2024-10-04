@@ -6,10 +6,10 @@ apply(plugin: "signing")
 apply(plugin: "maven-publish")
 
 signing {
-    useInMemoryPgpKeys(
-        findProperty("signingKey") ?: System.getenv("SIGNING_KEY"),
-        findProperty("signingPassword") ?: System.getenv("SIGNING_PASSWORD")
-    )
+    String signingKey = findProperty("signingKey") ?: System.getenv("SIGNING_KEY")
+    String signingPassword = findProperty("signingPassword") ?: System.getenv("SIGNING_PASSWORD")
+
+    useInMemoryPgpKeys(signingKey, signingPassword)
     required { gradle.taskGraph.hasTask("publish") }
     sign(publishing.publications)
 }
@@ -17,13 +17,19 @@ signing {
 publishing {
     repositories {
         maven {
-            url = version.endsWith("SNAPSHOT")?
-                "https://oss.sonatype.org/content/repositories/snapshots" :
-                "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            String stagingDirectory =
+                findProperty("stagingDirectory") ?: System.getenv("STAGING_DIRECTORY")
 
-            credentials {
-                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
-                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
+            if (stagingDirectory == null) {
+                url = "https://central.sonatype.com"
+
+                credentials {
+                    username = findProperty("ossrhUsername") ?: System.getenv("REPOSITORY_USERNAME")
+                    password = findProperty("ossrhPassword") ?: System.getenv("REPOSITORY_PASSWORD")
+                }
+            }
+            else {
+                url = rootProject.file(stagingDirectory)
             }
         }
     }
@@ -53,7 +59,7 @@ publishing {
                         developer {
                             id = "jaguililla"
                             name = "Juanjo Aguililla"
-                            email = "jaguililla@hexagonkt.com"
+                            email = "jaguililla@hexagontk.com"
                         }
                     }
                 }

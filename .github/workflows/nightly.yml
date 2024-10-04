@@ -9,8 +9,10 @@ permissions:
 jobs:
   stale:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
     steps:
-      - uses: actions/stale@v6
+      - uses: actions/stale@v9
         with:
           exempt-issue-labels: pinned
           include-only-assigned: true
@@ -62,7 +64,7 @@ jobs:
         with:
           minimum-size: 16GB
           disk-root: "C:"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: develop
       - uses: graalvm/setup-graalvm@v1
@@ -81,7 +83,7 @@ jobs:
       tasks: jmh
 
   build_site:
-    uses: hexagontk/hexagon/.github/workflows/site.yml@master
+    uses: hexagontk/hexagon/.github/workflows/site.yml@main
     with:
       ref: develop
 

@@ -11,8 +11,8 @@ places:
 
 For examples and reference, check [build.gradle.kts] and [gradle.properties].
 
-[build.gradle.kts]: https://github.com/hexagontk/hexagon/blob/master/build.gradle.kts
-[gradle.properties]: https://github.com/hexagontk/hexagon/blob/master/gradle.properties
+[build.gradle.kts]: https://github.com/hexagontk/hexagon/blob/main/build.gradle.kts
+[gradle.properties]: https://github.com/hexagontk/hexagon/blob/main/gradle.properties
 
 # Helper scripts
 These scripts can be added to your build to include a whole new capability to your building logic.
@@ -45,8 +45,8 @@ To set up this script's parameters, check the [build variables section]. These h
 * siteHost (REQUIRED): project's website.
 
 [Maven Central]: https://search.maven.org
-[kotlin.gradle]: https://github.com/hexagontk/hexagon/blob/master/gradle/kotlin.gradle
-[build variables section]: /gradle/#build-variables
+[kotlin.gradle]: https://github.com/hexagontk/hexagon/blob/main/gradle/kotlin.gradle
+[build variables section]: #build-variables
 
 ## Dokka
 This script set up [Dokka] tool and add a JAR with the project's code documentation to the published
@@ -68,7 +68,7 @@ IDEs.
 ## Icons
 Create web icons (favicon and thumbnails for browsers/mobile) from SVG images (logos).
 
-For image rendering you will need [rsvg] (librsvg2-bin) and [imagemagick] installed in the
+For image rendering you will need [rsvg] (librsvg2-bin) and `imagemagick` installed in the
 development machine.
 
 To use it, apply `$gradleScripts/icons.gradle` to your `build.gradle.kts`.
@@ -81,7 +81,6 @@ To set up this script's parameters, check the [build variables section]. These h
 * iconsDirectory: directory inside `build` where icons will be generated. The default is `icons`.
 
 [rsvg]: https://github.com/GNOME/librsvg
-[imagemagick]: https://imagemagick.org/index.php
 
 ## Kotlin
 Adds Kotlin's Gradle plugin.
@@ -105,7 +104,6 @@ To use it, apply `$gradleScripts/kotlin.gradle` and add the
 To set up this script's parameters, check the [build variables section]. These helper settings are:
 
 * kotlinVersion: Kotlin version. Defaults to the version used in the matching Hexagon release.
-* mockkVersion: MockK mocking library version. If no value is supplied, Hexagon's version is taken.
 * junitVersion: JUnit version (5+), the default value is the toolkit version.
 * basePackage: module's base package (used by the Jacoco Report when using Kotlin Coding Standard).
 * jvmTarget: target JVM version (defines the bytecode version used). If not set, '11' will be used.

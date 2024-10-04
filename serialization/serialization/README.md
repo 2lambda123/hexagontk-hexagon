@@ -6,7 +6,7 @@ This module holds serialization utilities.
 This module is not meant to be used directly. You should include an Adapter implementing this
 feature (as [serialization_dsl_json]) in order to parse/serialize data.
 
-[serialization_dsl_json]: /serialization_dsl_json
+[serialization_dsl_json]: serialization_dsl_json.md
 
 === "build.gradle"
 
@@ -15,14 +15,14 @@ feature (as [serialization_dsl_json]) in order to parse/serialize data.
         mavenCentral()
     }
 
-    implementation("com.hexagonkt:serialization:$hexagonVersion")
+    implementation("com.hexagontk:serialization:$hexagonVersion")
     ```
 
 === "pom.xml"
 
     ```xml
     <dependency>
-      <groupId>com.hexagonkt</groupId>
+      <groupId>com.hexagontk</groupId>
       <artifactId>serialization</artifactId>
       <version>$hexagonVersion</version>
     </dependency>
@@ -36,7 +36,7 @@ TODO Document module exposed ports:
 The core module has utilities to serialize/parse data classes to JSON and YAML. Read the following
 snippet for details:
 
-@code serialization/serialization_test/src/main/kotlin/com/hexagonkt/serialization/test/SerializationTest.kt?serializationUsage
+@code serialization/serialization_test/src/main/kotlin/com/hexagontk/serialization/test/SerializationTest.kt?serializationUsage
 
-# Package com.hexagonkt.serialization
+# Package com.hexagontk.serialization
 Parse/serialize data in different formats to class instances.

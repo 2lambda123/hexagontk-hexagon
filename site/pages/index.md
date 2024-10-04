@@ -23,10 +23,10 @@ Hexagon is designed to fit in applications that conform to the [Hexagonal Archit
 [Clean Architecture], [Onion Architecture] or [Ports and Adapters Architecture]). Its design
 principles also fit into this architecture.
 
-[The HTTP server]: /http_server
-[The HTTP client]: /http_client
-[Serialization]: /serialization
-[Template Processing]: /templates
+[The HTTP server]: http_server.md
+[The HTTP client]: http_client.md
+[Serialization]: serialization.md
+[Template Processing]: templates.md
 [Hexagonal Architecture]: http://fideloper.com/hexagonal-architecture
 [Clean Architecture]: https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html
 [Onion Architecture]: https://dzone.com/articles/onion-architecture-is-interesting
@@ -35,12 +35,12 @@ principles also fit into this architecture.
 # Hello World
 Simple Hello World HTTP example.
 
-@code http/http_server_jetty/src/test/kotlin/com/hexagonkt/http/server/jetty/HelloWorldTest.kt?hello_world
+@code http/http_server_jetty/src/test/kotlin/com/hexagontk/http/server/jetty/HelloWorldTest.kt?hello_world
 
 You can check the [code examples] and [demo projects] for more complex use cases.
 
-[code examples]: /examples/http_server_examples/
-[demo projects]: /examples/example_projects/
+[code examples]: examples/http_server_examples.md
+[demo projects]: examples/example_projects.md
 
 # Features
 Hexagon's goals and design principles:
@@ -57,17 +57,14 @@ Hexagon's goals and design principles:
 * **Batteries Included**: It contains all the required pieces to make production-grade applications:
   logging utilities, serialization, resource handling and build helpers.
 
-* **Kotlin First**: Take full advantage of Kotlin instead of just calling Java code from Kotlin. The
-  library is coded in Kotlin for coding with Kotlin. No strings attached to Java (as a Language).
+* **Native Image**: most of the toolkit libraries include GraalVM metadata (check the [libraries
+  catalog]), native tests are run on CI to ensure native images can be built out of the box.
 
 * **Properly Tested**: The project's coverage is checked in every Pull Request. It is also
   stress-tested at [TechEmpower Frameworks Benchmark][benchmark].
 
 [benchmark]: https://www.techempower.com/benchmarks
-
-# Not in Scope
-* **Kotlin Native**: because of the added complexity of Kotlin Native, focus will be set on the JVM
-  platform, native binaries' generation will rely on GraalVM.
+[libraries catalog]: https://www.graalvm.org/native-image/libraries-and-frameworks
 
 # Concepts
 
@@ -94,7 +91,7 @@ engines.
 start with their Port name.
 
 ## Composite Port
-These modules provide functionality on top of a set of ports combining them, but without relying on
+These modules provide functionality on top of a set of ports (combining them) but without relying on
 any specific adapters. An example would be the [Web] module that uses [http_server] and
 [template][Template Processing] Ports, but leaves clients the decision of picking the adapters they
 want.
@@ -106,24 +103,25 @@ Module that provide functionality that does not depend on different implementati
 ## Manager
 Singleton object to manage a cross toolkit aspect. I.e., Serialization or Templates.
 
-[core]: /core
-[handlers]: /handlers
+[core]: core.md
+[handlers]: handlers.md
 
-[http_server]: /http_server
-[templates]: /templates
+[http_server]: http_server.md
+[templates]: templates.md
 
-[http_client_jetty]: /http_client_jetty
-[http_server_jetty]: /http_server_jetty
+[http_client_jetty]: http_client_jetty.md
+[http_server_jetty]: http_server_jetty.md
 
 # Hexagon Extras
-The libraries inside the `hexagon_extra` repository provide extra features. They may be useful to
+The libraries inside the [hexagon_extra] repository provide extra features. They may be useful to
 develop applications, but not strictly required. Some of these modules are:
 
 * Schedulers: Provides repeated tasks execution based on [Cron] expressions.
 * Models: Contain classes that model common data objects.
 * Args: Command line arguments definition and parsing.
 
-[Web]: /web
+[hexagon_extra]: https://github.com/hexagontk/hexagon_extra
+[Web]: web.md
 [Cron]: https://en.wikipedia.org/wiki/Cron
 
 # Architecture
@@ -134,7 +132,7 @@ How Hexagon fits in your architecture in a picture.
 > <sup>Using this toolkit won't make your application compliant with Hexagonal Architecture (by its
 > nature, no tool can do that), you have to provide a layer of abstraction by yourself.</sup>
 
-![architecture](/img/architecture.svg)
+![architecture](img/architecture.svg)
 
 # Ports
 Ports with their provided implementations (Adapters).
@@ -142,45 +140,52 @@ Ports with their provided implementations (Adapters).
 | PORT                    | ADAPTERS                                              |
 |-------------------------|-------------------------------------------------------|
 | [HTTP Server]           | [Netty], [Netty Epoll], [Jetty], [Servlet], [Helidon] |
-| [HTTP Client]           | [Jetty][Jetty Client]                                 |
+| [HTTP Client]           | [Java][Java Client], [Jetty][Jetty Client]            |
 | [Templates]             | [Pebble], [FreeMarker], [Rocker], [jte]               |
 | [Serialization Formats] | [JSON], [YAML], [CSV], [XML], [TOML]                  |
 
-[HTTP Server]: /http_server
-[Netty]: /http_server_netty
-[Netty Epoll]: /http_server_netty_epoll
-[Jetty]: /http_server_jetty
-[Servlet]: /http_server_servlet
-[Helidon]: /http_server_helidon
-[HTTP Client]: /http_client
-[Jetty Client]: /http_client_jetty
-[Templates]: /templates
-[Pebble]: /templates_pebble
-[FreeMarker]: /templates_freemarker
-[Rocker]: /templates_rocker
-[jte]: /templates_jte
-[Serialization Formats]: /serialization
-[JSON]: /api/serialization/serialization_jackson_json/com.hexagonkt.serialization.jackson.json/-json
-[YAML]: /api/serialization/serialization_jackson_yaml/com.hexagonkt.serialization.jackson.yaml/-yaml
-[CSV]: /api/serialization/serialization_jackson_csv/com.hexagonkt.serialization.jackson.csv/-csv
-[XML]: /api/serialization/serialization_jackson_xml/com.hexagonkt.serialization.jackson.xml/-xml
-[TOML]: /api/serialization/serialization_jackson_toml/com.hexagonkt.serialization.jackson.toml/-toml
+[HTTP Server]: http_server.md
+[Netty]: http_server_netty.md
+[Netty Epoll]: http_server_netty_epoll.md
+[Jetty]: http_server_jetty.md
+[Servlet]: http_server_servlet.md
+[Helidon]: http_server_helidon.md
+[HTTP Client]: http_client.md
+[Java Client]: http_client_java.md
+[Jetty Client]: http_client_jetty.md
+[Templates]: templates.md
+[Pebble]: templates_pebble.md
+[FreeMarker]: templates_freemarker.md
+[Rocker]: templates_rocker.md
+[jte]: templates_jte.md
+[Serialization Formats]: serialization.md
+[JSON]: api/serialization/serialization_jackson_json/com.hexagontk.serialization.jackson.json/-json
+[YAML]: api/serialization/serialization_jackson_yaml/com.hexagontk.serialization.jackson.yaml/-yaml
+[CSV]: api/serialization/serialization_jackson_csv/com.hexagontk.serialization.jackson.csv/-csv
+[XML]: api/serialization/serialization_jackson_xml/com.hexagontk.serialization.jackson.xml/-xml
+[TOML]: api/serialization/serialization_jackson_toml/com.hexagontk.serialization.jackson.toml/-toml
 
 # Module Dependencies
 Module dependencies (including extra modules):
 
 ```mermaid
 graph TD
-  http_handlers -->|uses| http
-  http_handlers -->|uses| handlers
-  http_server -->|uses| http_handlers
-  http_client -->|uses| http_handlers
-  web -->|uses| http_server
+  serverless_http -->|uses| http_handlers
   web -->|uses| templates
-  rest -->|uses| http_handlers
-  rest -->|uses| serialization
-  rest_tools -->|uses| rest
+  web -->|uses| http_server
   rest_tools -->|uses| http_server
   rest_tools -->|uses| http_client
-  serverless_http -->|uses| http_handlers
+  rest_tools -->|uses| rest
+  http_server -->|uses| http_handlers
+  http_client -->|uses| http_handlers
+  rest -->|uses| http_handlers
+  rest -->|uses| serialization
+  http_handlers -->|uses| http
+  http_handlers -->|uses| handlers
+
+  serverless_http["`**serverless_http**`"]
+  http_server["`**http_server**`"]
+  http_client["`**http_client**`"]
+  templates["`**templates**`"]
+  serialization["`**serialization**`"]
 ```

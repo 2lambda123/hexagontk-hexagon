@@ -27,15 +27,18 @@ on:
         description: Directory to check for build execution.
         default: site/build/site
 
+      options:
+        type: string
+        description: Extra options for the 'buildSite' target.
+        default: ''
+
 jobs:
   site:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     defaults:
       run: { shell: bash }
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: ${{ runner.os }}-mkdocs-${{ hashFiles('**/*.gradle*', '**/gradle*.properties') }}
           restore-keys: ${{ runner.os }}-mkdocs-
@@ -43,7 +46,7 @@ jobs:
             ~/.local/bin
             ~/.local/lib/python*/site-packages
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.ref }}
 
@@ -54,9 +57,14 @@ jobs:
           java-version: ${{ inputs.java }}
           cache: gradle
 
-      - run: ./gradlew --stacktrace build
-
-      - run: ./gradlew --stacktrace -x build buildSite
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export GIT_COMMITTER_NAME="${GITHUB_ACTOR}"
+          export GIT_COMMITTER_EMAIL="project@hexagontk.com"
+          git fetch origin gh-pages --depth=1
+          ./gradlew --stacktrace build
+          ./gradlew --stacktrace -x build buildSite ${{ inputs.options }}
 
       - if: ${{ inputs.check_directory != '' }}
         run: ls -AlF "${{ inputs.check_directory }}"

@@ -2,10 +2,11 @@
 # Module http_server_helidon
 [Helidon] adapter for the [http_server] port.
 
-## This adapter is in ALPHA state!
+IMPORTANT: There is a [known bug] in this adapter.
 
+[known bug]: https://github.com/hexagontk/hexagon/issues/704
 [Helidon]: https://helidon.io
-[http_server]: /http_server
+[http_server]: http_server.md
 
 ### Install the Dependency
 
@@ -17,7 +18,7 @@
     }
 
     dependencies {
-      implementation("com.hexagonkt:http_server_helidon:$hexagonVersion")
+      implementation("com.hexagontk:http_server_helidon:$hexagonVersion")
     }
     ```
 
@@ -25,11 +26,11 @@
 
     ```xml
     <dependency>
-      <groupId>com.hexagonkt</groupId>
+      <groupId>com.hexagontk</groupId>
       <artifactId>http_server_helidon</artifactId>
       <version>$hexagonVersion</version>
     </dependency>
     ```
 
-# Package com.hexagonkt.http.server.helidon
+# Package com.hexagontk.http.server.helidon
 Code implementing the Helidon HTTP server adapter.

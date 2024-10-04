@@ -16,42 +16,47 @@ application), you can import it with the following code:
         mavenCentral()
     }
 
-    implementation("com.hexagonkt:core:$hexagonVersion")
+    implementation("com.hexagontk:core:$hexagonVersion")
     ```
 
 === "pom.xml"
 
     ```xml
     <dependency>
-      <groupId>com.hexagonkt</groupId>
+      <groupId>com.hexagontk</groupId>
       <artifactId>core</artifactId>
       <version>$hexagonVersion</version>
     </dependency>
     ```
 
-# Package com.hexagonkt.core
-JVM information and other useful utilities. Includes basic program settings support at the [Jvm]
-object (like loading and retrieving system settings).
+# Package com.hexagontk.core
+Platform information and other useful utilities. Includes basic program settings support at the
+[Platform] object (like loading and retrieving system settings).
 
-[Jvm]: /api/core/com.hexagonkt.core/-jvm
-
-# Package com.hexagonkt.core.logging
 Provides a logging management capabilities abstracting the application from logging libraries.
 
-The following code block shows the most common use cases for the [Logger] class:
+The following code block shows the most common use cases for the logging utilities:
 
-@code core/src/test/kotlin/com/hexagonkt/core/logging/LoggerTest.kt?logger
+@code core/src/test/kotlin/com/hexagontk/core/LoggersTest.kt?logger
 
 By default, Hexagon uses the [System.Logger] class.
 
-[Logger]: /api/core/com.hexagonkt.core.logging/-logger
+[Platform]: ../api/core/com.hexagontk.core/-platform
 [System.Logger]: https://docs.oracle.com/javase/9/docs/api/java/lang/System.Logger.html
 
-# Package com.hexagonkt.core.media
+# Package com.hexagontk.core.media
 Media types definitions and constants for default media types.
 
-# Package com.hexagonkt.core.security
+# Package com.hexagontk.core.security
 Cryptography and key stores utilities.
 
-# Package com.hexagonkt.core.text
+# Package com.hexagontk.core.text
 Text utilities to allow the use of ANSI escape codes and case converting tools among other features.
+
+> TODO Create 'Pairs' class to model a list of pairs with repeatable keys
+>  Should allow to convert to list if keys are null, grouping values if there are duplicates
+>  Use it in serialization and HTTP fields (query params, forms, etc.)
+>
+> TODO Remove logger class and make log utilities extension methods (creating a loggerOf() helper)
+>
+> TODO logger and security may be removed and their content moved to root

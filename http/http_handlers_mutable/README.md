@@ -77,7 +77,7 @@ methods.
 
 @code http/http_test/src/main/kotlin/com/hexagonkt/http/test/examples/SamplesTest.kt?serverCreation
 
-[server settings]: /api/http_server/com.hexagonkt.http.server/-http-server-settings
+[server settings]: /api/http_server/com.hexagontk.http.server/-http-server-settings
 [handlers section]: /http_server/#handlers
 [start()]: /api/http_server/com.hexagonkt.http.server/-http-server/start.html
 [stop()]: /api/http_server/com.hexagonkt.http.server/-http-server/stop.html
@@ -292,9 +292,9 @@ Check the next example for details:
 
 ## Media Types
 The media types of static files are computed from the file extension using the utility methods of
-the [com.hexagonkt.core.media] package.
+the [com.hexagontk.core.media] package.
 
-[com.hexagonkt.core.media]: /api/core/com.hexagonkt.core.media
+[com.hexagontk.core.media]: /api/core/com.hexagonkt.core.media
 
 # CORS
 CORS behaviour can be different depending on the path. You can attach different [CORS Callbacks] to
@@ -388,21 +388,21 @@ For a quick example, check the snipped below:
 
 @code http/http_test/src/main/kotlin/com/hexagonkt/http/test/examples/SamplesTest.kt?mockRequest
 
-# Package com.hexagonkt.http.server
+# Package com.hexagontk.http.server
 This package defines server interfaces for HTTP server adapters.
 
-# Package com.hexagonkt.http.server.callbacks
+# Package com.hexagontk.http.server.callbacks
 Utility callbacks that can be used on handlers. Reuse a callback in different handlers (after,
 filter, etc.).
 
-# Package com.hexagonkt.http.server.handlers
+# Package com.hexagontk.http.server.handlers
 Contains the HTTP handlers implementation (on top of Core's general event handlers). It houses the
 HTTP handlers (AfterHandler, OnHandler, PathHandler and FilterHandler) and the HTTP predicate.
 
-# Package com.hexagonkt.http.server.model
+# Package com.hexagontk.http.server.model
 Classes to model server HTTP messages (requests and responses). Built on top of the [http] module.
 
-# Package com.hexagonkt.http.model.ws
+# Package com.hexagontk.http.model.ws
 Classes to model server HTTP messages (requests and responses). Built on top of the [http] module.
 
 [http]: /http
